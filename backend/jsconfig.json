@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true,
+        "moduleResolution": "node",
+        "target": "es2020",
+        "module": "commonjs"
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}
