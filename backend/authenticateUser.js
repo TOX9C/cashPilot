@@ -1,14 +1,14 @@
 const jwt = require("jsonwebtoken");
 
 const checkToken = (req, res, next) => {
-  const token = req.headers["authorization"];
-  if (!token || !token.split(" ")[1]) return res.json({ message: "no auth" });
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ message: "Not authenticated" });
   try {
-    const Dtoken = jwt.verify(token.split(" ")[1], process.env.JWT_CODE);
+    const Dtoken = jwt.verify(token, process.env.JWT_CODE);
     req.user = Dtoken;
     next();
   } catch (error) {
-    console.log(error);
+    return res.status(401).json({ message: "Token expired" });
   }
 };
 

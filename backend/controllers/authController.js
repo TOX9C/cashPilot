@@ -5,18 +5,20 @@ const z = require("zod");
 
 const prisma = new PrismaClient();
 const userSchema = z.object({
-  username: z.string(),
+  username: z.string().min(3),
   password: z
     .string()
     .min(8, { message: "Too short" })
     .max(32, { message: "Too long" })
-    .includes("!@#$%^&*", { message: "has to include a special chartecter" }),
+    .refine((val) => /[!@#$%^&*]/.test(val), {
+      message: "has to include a special charecter",
+    }),
 });
 
 const login = async (req, res) => {
   const { username, password } = req.body;
   try {
-    const user = prisma.user.findMany({
+    const user = await prisma.user.findUnique({
       where: {
         username,
       },
@@ -27,16 +29,26 @@ const login = async (req, res) => {
     const token = jwt.sign({ id: user.id }, process.env.JWT_CODE, {
       expiresIn: "7d",
     });
-    return res.json({ token });
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameStie: "strict",
+    });
+    return res.json({ message: "sccess" });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 };
 
 const register = async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.json({ message: "no info" });
-  userSchema.parse({ username, password });
+
+  const validation = userSchema.safeParse({ username, password });
+  if (!validation.success) {
+    const message = validation.error.issues.map((err) => err.message);
+    return res.json({ message });
+  }
+
   try {
     const salt = await bccypt.genSalt();
     const hashedPass = await bccypt.hash(password, salt);
@@ -49,9 +61,14 @@ const register = async (req, res) => {
     const token = jwt.sign({ id: user.id }, process.env.JWT_CODE, {
       expiresIn: "7d",
     });
-    return res.json({ token });
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "strict",
+    });
+    return res.json({ message: "sccess" });
   } catch (error) {
-    return res.json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
