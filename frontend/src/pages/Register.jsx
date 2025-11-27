@@ -27,9 +27,10 @@ const Register = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      {message.map((message, index) => {
-        return <div key={index}>{message}</div>;
-      })}
+      {message &&
+        message.map((message, index) => {
+          return <div key={index}>{message}</div>;
+        })}
       <div>
         <button onClick={handleLogin}>Register</button>
         <button onClick={() => navigate("/login")}>

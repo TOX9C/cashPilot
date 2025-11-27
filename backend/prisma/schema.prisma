@@ -1,59 +1,66 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id       Int       @unique @default(autoincrement())
-    username String    @unique
-    password String
-    accounts Account[]
-    goals    Goal[]
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  accounts  Account[]
+  goals     Goal[]
 }
 
 model Account {
-    id           Int           @unique @default(autoincrement())
-    name         String
-    cash         Int
-    transactions Transaction[]
-    User         User?         @relation(fields: [userId], references: [id])
-    userId       Int?
+  id           Int           @id @default(autoincrement())
+  name         String
+  cash         Int           @default(0)
+  userId       Int
+  User         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([userId])
 }
 
 model Transaction {
-    id         Int      @unique @default(autoincrement())
-    descripton String
-    amount     Int
-    type       cata
-    Account    Account? @relation(fields: [accountId], references: [id])
-    accountId  Int?
-    created_at DateTime @default(now())
+  id          Int             @id @default(autoincrement())
+  description String
+  amount      Int
+  type        TransactionType
+  accountId   Int
+  Account     Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([accountId])
 }
 
-enum cata {
-    rent
-    utilites
-    food
-    trasport
-    personal
-    income
+enum TransactionType {
+  rent
+  utilities
+  food
+  transport
+  personal
+  income
 }
 
 model Goal {
-    id          Int    @unique @default(autoincrement())
-    name        String
-    finalAmount Int
-    curAmount   Int
-    User        User?  @relation(fields: [userId], references: [id])
-    userId      Int?
+  id          Int      @id @default(autoincrement())
+  name        String
+  finalAmount Int
+  curAmount   Int      @default(0)
+  userId      Int
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
 }

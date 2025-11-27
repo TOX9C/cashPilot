@@ -1,0 +1,14 @@
+const RecentTransations = () => {
+  return (
+    <div className="bg-white/80 shadow-sm backdrop-blur-xl rounded-3xl p-5">
+      <div>
+        <p className="text-2xl text-slate-900 font-semibold ">
+          Recent Transactions
+        </p>
+        <button className="text-blue-500">View all</button>
+      </div>
+      <div></div>
+    </div>
+  );
+};
+export default RecentTransations;

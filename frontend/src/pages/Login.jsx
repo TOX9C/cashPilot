@@ -9,7 +9,7 @@ const Login = () => {
   const handleLogin = async () => {
     const res = await api.post("/auth/login", { username, password });
     console.log(res.data);
-    if (res.data.message === "sccess") {
+    if (res.data.message === "success") {
       navigate("/");
     }
   };
