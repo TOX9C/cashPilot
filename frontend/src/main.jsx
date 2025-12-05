@@ -6,6 +6,10 @@ import Index from "./pages/Index.jsx";
 import Login from "./pages/Login.jsx";
 import ProtectedRoute from "./utils/protectedRoute.jsx";
 import Register from "./pages/Register.jsx";
+import Accounts from "./pages/Accounts.jsx";
+import Transactions from "./pages/Transactions.jsx";
+import Goals from "./pages/Goals.jsx";
+import Options from "./pages/Options.jsx";
 
 const routes = createBrowserRouter([
   {
@@ -13,6 +17,39 @@ const routes = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <Index />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/accounts",
+    element: (
+      <ProtectedRoute>
+        <Accounts />{" "}
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/transactions",
+    element: (
+      <ProtectedRoute>
+        <Transactions />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/goals",
+    element: (
+      <ProtectedRoute>
+        {" "}
+        <Goals />{" "}
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/options",
+    element: (
+      <ProtectedRoute>
+        <Options />{" "}
       </ProtectedRoute>
     ),
   },

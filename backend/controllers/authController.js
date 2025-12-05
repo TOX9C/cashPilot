@@ -89,4 +89,13 @@ const attachSessionCookie = (res, token) => {
   });
 };
 
-module.exports = { login, register };
+const logout = async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    sameSite: "strict",
+    secure: process.env.NODE_ENV === "production",
+  });
+  return res.json({ message: "Logged out successfully" });
+};
+
+module.exports = { login, register, logout };
