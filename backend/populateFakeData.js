@@ -33,7 +33,7 @@ api.interceptors.response.use((response) => {
 // Helper function to generate random date within a range
 function randomDate(start, end) {
   return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime())
+    start.getTime() + Math.random() * (end.getTime() - start.getTime()),
   );
 }
 
@@ -43,20 +43,56 @@ function formatDate(date) {
 }
 
 // Transaction types
-const transactionTypes = ["rent", "utilities", "food", "transport", "personal", "income"];
+const transactionTypes = [
+  "rent",
+  "utilities",
+  "food",
+  "transport",
+  "personal",
+  "income",
+];
 
 // Fake transaction descriptions
 const transactionDescriptions = {
   rent: ["Monthly Rent", "Apartment Rent", "House Rent"],
-  utilities: ["Electric Bill", "Water Bill", "Internet Bill", "Gas Bill", "Phone Bill"],
-  food: ["Grocery Shopping", "Restaurant", "Coffee Shop", "Fast Food", "Supermarket"],
-  transport: ["Gas Station", "Uber Ride", "Bus Ticket", "Train Ticket", "Parking Fee"],
+  utilities: [
+    "Electric Bill",
+    "Water Bill",
+    "Internet Bill",
+    "Gas Bill",
+    "Phone Bill",
+  ],
+  food: [
+    "Grocery Shopping",
+    "Restaurant",
+    "Coffee Shop",
+    "Fast Food",
+    "Supermarket",
+  ],
+  transport: [
+    "Gas Station",
+    "Uber Ride",
+    "Bus Ticket",
+    "Train Ticket",
+    "Parking Fee",
+  ],
   personal: ["Clothing", "Entertainment", "Gym Membership", "Haircut", "Books"],
-  income: ["Salary", "Freelance Work", "Investment Return", "Bonus", "Side Hustle"],
+  income: [
+    "Salary",
+    "Freelance Work",
+    "Investment Return",
+    "Bonus",
+    "Side Hustle",
+  ],
 };
 
 // Fake account names
-const accountNames = ["Main Checking", "Savings Account", "Emergency Fund", "Business Account"];
+const accountNames = [
+  "Main Checking",
+  "Savings Account",
+  "Emergency Fund",
+  "Business Account",
+];
 
 // Fake goal names
 const goalNames = [
@@ -73,7 +109,7 @@ async function populateFakeData() {
 
     // Step 1: Register a test user
     console.log("1. Registering test user...");
-    const username = `testuser_${Date.now()}`;
+    const username = `testuser`;
     const password = "Test123!@#";
 
     try {
@@ -109,9 +145,14 @@ async function populateFakeData() {
           cash: initialBalance,
         });
         accounts.push(res.data.account);
-        console.log(`   ✓ Created account: ${accountNames[i]} with $${initialBalance}`);
+        console.log(
+          `   ✓ Created account: ${accountNames[i]} with $${initialBalance}`,
+        );
       } catch (error) {
-        console.error(`   ✗ Error creating account ${accountNames[i]}:`, error.response?.data || error.message);
+        console.error(
+          `   ✗ Error creating account ${accountNames[i]}:`,
+          error.response?.data || error.message,
+        );
       }
     }
     console.log(`\n   Total accounts created: ${accounts.length}\n`);
@@ -132,17 +173,34 @@ async function populateFakeData() {
 
     // Generate transactions for each month going backwards
     for (let monthOffset = 0; monthOffset < 6; monthOffset++) {
-      const targetMonth = new Date(now.getFullYear(), now.getMonth() - monthOffset, 1);
-      const monthStart = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), 1);
-      const monthEnd = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0);
-      
-      console.log(`   Creating transactions for ${monthStart.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}...`);
+      const targetMonth = new Date(
+        now.getFullYear(),
+        now.getMonth() - monthOffset,
+        1,
+      );
+      const monthStart = new Date(
+        targetMonth.getFullYear(),
+        targetMonth.getMonth(),
+        1,
+      );
+      const monthEnd = new Date(
+        targetMonth.getFullYear(),
+        targetMonth.getMonth() + 1,
+        0,
+      );
+
+      console.log(
+        `   Creating transactions for ${monthStart.toLocaleDateString("en-US", { month: "long", year: "numeric" })}...`,
+      );
 
       for (let i = 0; i < transactionsPerMonth; i++) {
-        const randomAccount = accounts[Math.floor(Math.random() * accounts.length)];
-        const randomType = transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
+        const randomAccount =
+          accounts[Math.floor(Math.random() * accounts.length)];
+        const randomType =
+          transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
         const descriptions = transactionDescriptions[randomType];
-        const description = descriptions[Math.floor(Math.random() * descriptions.length)];
+        const description =
+          descriptions[Math.floor(Math.random() * descriptions.length)];
 
         // Generate realistic amounts based on type
         let amount;
@@ -161,8 +219,13 @@ async function populateFakeData() {
         }
 
         // Generate a random date within the month
-        const randomDay = Math.floor(Math.random() * (monthEnd.getDate() - 1)) + 1;
-        const transactionDate = new Date(targetMonth.getFullYear(), targetMonth.getMonth(), randomDay);
+        const randomDay =
+          Math.floor(Math.random() * (monthEnd.getDate() - 1)) + 1;
+        const transactionDate = new Date(
+          targetMonth.getFullYear(),
+          targetMonth.getMonth(),
+          randomDay,
+        );
         // Add random time within the day
         transactionDate.setHours(Math.floor(Math.random() * 24));
         transactionDate.setMinutes(Math.floor(Math.random() * 60));
@@ -178,7 +241,10 @@ async function populateFakeData() {
           });
           transactionCount++;
         } catch (error) {
-          console.error(`   ✗ Error adding transaction:`, error.response?.data || error.message);
+          console.error(
+            `   ✗ Error adding transaction:`,
+            error.response?.data || error.message,
+          );
         }
       }
     }
@@ -186,10 +252,13 @@ async function populateFakeData() {
     // Add some recent transactions for current month
     console.log(`   Creating transactions for current month...`);
     for (let i = 0; i < 10; i++) {
-      const randomAccount = accounts[Math.floor(Math.random() * accounts.length)];
-      const randomType = transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
+      const randomAccount =
+        accounts[Math.floor(Math.random() * accounts.length)];
+      const randomType =
+        transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
       const descriptions = transactionDescriptions[randomType];
-      const description = descriptions[Math.floor(Math.random() * descriptions.length)];
+      const description =
+        descriptions[Math.floor(Math.random() * descriptions.length)];
 
       let amount;
       if (randomType === "income") {
@@ -202,9 +271,18 @@ async function populateFakeData() {
 
       // Random date in current month
       const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      const currentMonthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      const randomDay = Math.floor(Math.random() * (currentMonthEnd.getDate() - 1)) + 1;
-      const transactionDate = new Date(now.getFullYear(), now.getMonth(), randomDay);
+      const currentMonthEnd = new Date(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        0,
+      );
+      const randomDay =
+        Math.floor(Math.random() * (currentMonthEnd.getDate() - 1)) + 1;
+      const transactionDate = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        randomDay,
+      );
       transactionDate.setHours(Math.floor(Math.random() * 24));
       transactionDate.setMinutes(Math.floor(Math.random() * 60));
 
@@ -218,7 +296,10 @@ async function populateFakeData() {
         });
         transactionCount++;
       } catch (error) {
-        console.error(`   ✗ Error adding transaction:`, error.response?.data || error.message);
+        console.error(
+          `   ✗ Error adding transaction:`,
+          error.response?.data || error.message,
+        );
       }
     }
 
@@ -243,10 +324,15 @@ async function populateFakeData() {
           curAmount: currentAmount,
         });
 
-        console.log(`   ✓ Created goal: ${goalNames[i]} ($${currentAmount} / $${targetAmount})`);
+        console.log(
+          `   ✓ Created goal: ${goalNames[i]} ($${currentAmount} / $${targetAmount})`,
+        );
         goalCount++;
       } catch (error) {
-        console.error(`   ✗ Error creating goal ${goalNames[i]}:`, error.response?.data || error.message);
+        console.error(
+          `   ✗ Error creating goal ${goalNames[i]}:`,
+          error.response?.data || error.message,
+        );
       }
     }
     console.log(`\n   Total goals created: ${goalCount}\n`);
@@ -258,10 +344,14 @@ async function populateFakeData() {
     console.log(`   - Accounts: ${accounts.length}`);
     console.log(`   - Transactions: ${transactionCount}`);
     console.log(`   - Goals: ${goalCount}`);
-    console.log(`\n💡 You can now login with these credentials to see the fake data!`);
-
+    console.log(
+      `\n💡 You can now login with these credentials to see the fake data!`,
+    );
   } catch (error) {
-    console.error("❌ Error populating fake data:", error.response?.data || error.message);
+    console.error(
+      "❌ Error populating fake data:",
+      error.response?.data || error.message,
+    );
     if (error.response) {
       console.error("   Status:", error.response.status);
       console.error("   Data:", JSON.stringify(error.response.data, null, 2));
